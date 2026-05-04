@@ -142,3 +142,28 @@ En caso de que un dispositivo ya no sea necesario, puede eliminarse del sistema 
 
 
 Como funcionalidad adicional, la API incluye el endpoint GET /devices/count, el cual permite obtener un conteo de los dispositivos agrupados por tipo. Esto resulta útil para tener una visión general del inventario.
+
+# Correciones 
+Preguntas para el trabajo final:
+
+1) La API de inventario permite crear, actualizar y eliminar dispositivos sin ningún tipo de autenticación o control de acceso.
+
+Para este ejercicio guardan en una lista en memoria cada dispositivo. Si tuviesen varios usuarios usando la API concurrentemente y quisieran permanencia de los dispositivos por usuario, cómo podrían asegurar la integridad de los datos?
+
+Actualmente los dispositivos se guardan en una lista en memoria, lo cual no es adecuado si hay varios usuarios concurrentes ni garantiza persistencia. Para asegurar la integridad de los datos, lo primero sería migrar a una base de datos real como PostgreSQL o MongoDB, donde cada dispositivo esté asociado a un usuario mediante un identificador.
+
+Además, implementaría autenticación (por ejemplo con tokens JWT) para que cada usuario solo pueda acceder y modificar sus propios dispositivos. Esto evita accesos no autorizados.
+
+También es importante manejar la concurrencia. Las bases de datos ya incluyen mecanismos como transacciones y bloqueos que evitan inconsistencias cuando varios usuarios modifican datos al mismo tiempo. Adicionalmente, se pueden usar validaciones para evitar duplicados y asegurar que los cambios sean correctos.
+
+Finalmente, separaría la lógica en capas (API, servicios y base de datos) para tener un mejor control y escalabilidad del sistema.
+
+2) Cómo podrían scrappear diferentes términos en simultaneo evitando que los  bloquee la página web?
+
+Para hacer scraping de varios términos en simultáneo sin ser bloqueado, es importante no enviar demasiadas solicitudes en poco tiempo. Se pueden usar delays (tiempos de espera) entre peticiones para simular comportamiento humano.
+
+También se puede utilizar rotación de User-Agent para que las solicitudes no parezcan venir siempre del mismo cliente, y en algunos casos rotación de IP mediante proxies.
+
+Otra opción es usar herramientas como Scrapy o técnicas asíncronas en Python que permiten manejar múltiples solicitudes de forma controlada.
+
+Además, es recomendable respetar las políticas del sitio (como robots.txt) y limitar la frecuencia de acceso. De esta forma se evita ser bloqueado y se mantiene un scraping más estable y confiable.
